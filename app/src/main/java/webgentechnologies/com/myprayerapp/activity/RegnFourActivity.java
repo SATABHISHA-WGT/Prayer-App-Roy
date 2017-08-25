@@ -62,7 +62,7 @@ public class RegnFourActivity extends AppCompatActivity implements View.OnClickL
                 String password2 = txt_password_retype.getText().toString();
                 if (password2.equals(password1)) {
                     txt_pwdcheck.setText("Password matched successfully");
-                    userclass.setTxt_pswd(password2);
+                    //    userclass.setTxt_pswd(password2);
                 } else {
                     txt_pwdcheck.setText("Incorrect password");
                 }
@@ -117,7 +117,17 @@ public class RegnFourActivity extends AppCompatActivity implements View.OnClickL
         int item = v.getId();
         switch (item) {
             case R.id.btn_signUp:
-                registerUser();
+                if (txt_password.getText().toString().length() > 0 && txt_password_retype.getText().toString().length() > 0 && txt_password.getText().toString().equals(txt_password_retype.getText().toString())) {
+                    userclass.setTxt_pswd(txt_password_retype.getText().toString());
+                    registerUser();
+
+                } else if (txt_password.getText().toString().length() == 0 && txt_password_retype.getText().toString().length() == 0) {
+                    txt_password.setError("Fields cann't be empty");
+                    txt_password_retype.setError("Fields cann't be empty");
+                } else if (txt_password.getText().toString().length() > 0 && txt_password_retype.getText().toString().length() == 0)
+                    txt_password_retype.setError("Fields cann't be empty");
+                else if (txt_password.getText().toString().length() == 0 && txt_password_retype.getText().toString().length() > 0)
+                    txt_password.setError("Fields cann't be empty");
                 break;
             case R.id.imageButtonPrev:
                 finish();

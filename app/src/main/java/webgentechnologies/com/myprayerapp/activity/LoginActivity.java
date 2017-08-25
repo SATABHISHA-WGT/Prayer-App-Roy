@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                              String fid = object.getString("id");*/
                                 userclass.setTxt_fcbl_lgn_first_name(object.getString("first_name"));
                                 userclass.setTxt_fcbk_lgn_last_name(object.getString("last_name"));
-                                userclass.setTxt_fcbk_lgn_email(object.getString("email"));
+                                userclass.setTxt_fcbk_login_and_normal_login_email(object.getString("email"));
                                 userclass.setTxt_fcbk_lgn_gender(object.getString("gender"));
                                 userclass.setTxt_fcbk_lgn_fcbkid(object.getString("id"));
                                 // tvdetails.setText("Name: "+fnm+" "+lnm+" \n"+"Email: "+mail+" \n"+"Gender: "+gender+" \n"+"ID: "+fid+" \n"+"Birth Date: "+birthday);
@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                            /*  Intent i=new Intent(MainActivity.this,ActivitySecond.class);
                              startActivity(i);*/
                                 registerFcbkUser();
-                                Toast.makeText(getApplicationContext(), userclass.getTxt_fcbk_lgn_email(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), userclass.getTxt_fcbk_login_and_normal_login_email(), Toast.LENGTH_LONG).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -219,7 +219,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ((TextView) findViewById(R.id.tv_forgot_pwd)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordOneActivity.class);
                 startActivity(intent);
             }
         });
@@ -309,7 +309,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         userclass.setTxt_user_login_id(jobdata.getString("id"));
                         userclass.setTxt_user_access_token(jobdata.getString("accessToken"));
                         userclass.setTxt_temp_user_login_email(jobdata.getString("email"));
-                        userclass.setTxt_fcbk_lgn_email(userclass.getTxt_temp_user_login_email());
+                        userclass.setTxt_user_login_fname(jobdata.getString("firstName"));
+                        userclass.setTxt_user_login_lname(jobdata.getString("lastName"));
+                        userclass.setTxt_fcbk_login_and_normal_login_email(userclass.getTxt_temp_user_login_email());
                     } else
                         Toast.makeText(getApplicationContext(), "Incorrect email_id or password", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -342,7 +344,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 //----------Volley code for login ends------------
 
-    //Volley code for registration...
+    //Volley code to register for facebook users in the api i.e made in php...
     public void registerFcbkUser() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_REGISTER_USER, new Response.Listener<String>() {
             @Override
@@ -352,11 +354,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     JSONObject job = new JSONObject(response);
                     String status = job.getString("status");
 
-                    if (status.equals("true"))
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    else {
+                    if (status.equals("true")) {
+                        //  startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        loginforfcbkusers();
+                    } else if (status.equals("false")) {
                         Toast.makeText(getApplicationContext(), "Already registered,now edit your profile", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        // startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        loginforfcbkusers();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -376,7 +380,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 params.put(KEY_EMAIL, email);*/
                 params.put("first_name", userclass.getTxt_fcbl_lgn_first_name());
                 params.put("last_name", userclass.getTxt_fcbk_lgn_last_name());
-                params.put("email", userclass.getTxt_fcbk_lgn_email());
+                params.put("email", userclass.getTxt_fcbk_login_and_normal_login_email());
                 params.put("country_id", "");
                 params.put("country_name", "");
                 params.put("address1", "");
@@ -433,4 +437,66 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestQueue.add(stringRequest);
     }
     //-----------Volley code for registration ends------------------
+
+    /*
+    *Volley code for login for facebook users
+    * This is normal login fetched from api made in php.
+    * This login() will be called after facebook login
+     */
+    public void loginforfcbkusers() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_USER_LOGIN, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
+                try {
+                    JSONObject job = new JSONObject(response);
+                    String status = job.getString("status");
+
+                    if (status.equals("true")) {
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        JSONObject jobdata = job.getJSONObject("data");
+                        userclass.setTxt_user_login_id(jobdata.getString("id"));
+                        userclass.setTxt_user_access_token(jobdata.getString("accessToken"));
+                        userclass.setTxt_user_login_fname(jobdata.getString("firstName"));
+                        userclass.setTxt_user_login_lname(jobdata.getString("lastName"));
+                        userclass.setTxt_temp_user_login_email(jobdata.getString("email"));
+                        userclass.setTxt_fcbk_login_and_normal_login_email(userclass.getTxt_temp_user_login_email());
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
+                    } else {
+                        // Toast.makeText(getApplicationContext(), "Incorrect email_id or password", Toast.LENGTH_LONG).show();
+                        // registerFcbkUser();
+                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+              /*  params.put(KEY_USERNAME,username);
+                params.put(KEY_PASSWORD,password);
+                params.put(KEY_EMAIL, email);*/
+                params.put("email", userclass.getTxt_fcbk_login_and_normal_login_email());
+                params.put("password", "");
+                params.put("device_id", "245");
+                params.put("device_type", "Android");
+
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    //-----------Volley code for login for facebook users ends-----------
+
 }

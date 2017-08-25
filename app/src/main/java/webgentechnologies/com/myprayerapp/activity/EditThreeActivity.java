@@ -281,7 +281,7 @@ public class EditThreeActivity extends AppCompatActivity implements View.OnClick
                 params.put("first_name", userclass.getTxt_editone_fname());
                 params.put("last_name", userclass.getTxt_editone_lname());
                 //params.put("email", userclass.getTxt_editone_email());
-                params.put("email", userclass.getTxt_fcbk_lgn_email());
+                params.put("email", userclass.getTxt_fcbk_login_and_normal_login_email());
                 params.put("country_id", userclass.getTxt_editone_countryid1());
                 params.put("country_name", userclass.getTxt_editone_country_name());
                 params.put("address1", userclass.getTxt_editone_addr1());

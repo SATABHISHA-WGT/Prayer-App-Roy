@@ -30,7 +30,7 @@ import webgentechnologies.com.myprayerapp.R;
 import webgentechnologies.com.myprayerapp.model.UserSingletonModelClass;
 import webgentechnologies.com.myprayerapp.networking.UrlConstants;
 
-public class ResetPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordTwoActivity extends AppCompatActivity {
     Button m_btn_resetPwd;
     String m_verify_mode, txt_password_change;
     Context m_ctx;
@@ -79,8 +79,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     private void setCustomDesign() {
-        m_ctx = ResetPasswordActivity.this;
-        m_verify_mode = this.getIntent().getStringExtra("verify_mode");
+        m_ctx = ForgotPasswordTwoActivity.this;
+        m_verify_mode = "change_pwd";//this.getIntent().getStringExtra("verify_mode");
 
         Typeface regular_font = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
         ((TextView) findViewById(R.id.tv_resetPwd)).setTypeface(regular_font);
@@ -112,6 +112,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
+                // finish();
             }
         });
 
@@ -149,10 +150,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
 *Volley code to reset password
 */
     public void resetPassword() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_CHANGE_PASSWORD, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_CHANGE_PASSWORD_FOR_FORGOT_PASSWORD_USERS, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(ResetPasswordActivity.this, response, Toast.LENGTH_LONG).show();
+                Toast.makeText(ForgotPasswordTwoActivity.this, response, Toast.LENGTH_LONG).show();
               /*  try {
                     JSONObject job = new JSONObject(response);
                     String status = job.getString("status");
@@ -173,12 +174,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     JSONObject job = new JSONObject(response);
                     String status = job.getString("status");
                     if (status.equals("true")) {
-                        Intent intent = new Intent(m_ctx, HomeActivity.class);
+                        Intent intent = new Intent(m_ctx, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else
-                        Toast.makeText(ResetPasswordActivity.this, "Error!Try again", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ForgotPasswordTwoActivity.this, "Error!Try again", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -187,7 +188,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ResetPasswordActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(ForgotPasswordTwoActivity.this, error.toString(), Toast.LENGTH_LONG).show();
             }
         }) {
             @Override
@@ -197,15 +198,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 params.put(KEY_PASSWORD,password);
                 params.put(KEY_EMAIL, email);*/
                 params.put("password", txt_password_change);
-                params.put("user_id", userclass.getTxt_user_login_id());
-                params.put("access_token", userclass.getTxt_user_access_token());
+                params.put("email", userclass.getTxt_email_for_forgot_password());
                 params.put("device_id", "245");
                 params.put("device_type", "Android");
 
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(ResetPasswordActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(ForgotPasswordTwoActivity.this);
         requestQueue.add(stringRequest);
     }
 //----------Volley code to reset password ends------------

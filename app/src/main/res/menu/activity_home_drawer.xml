@@ -26,7 +26,7 @@
             android:title="Search Prayer" />
     </group>
     <group
-        android:id="@+id/group4"
+        android:id="@+id/group_nav_change_pwd"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_changePwd"

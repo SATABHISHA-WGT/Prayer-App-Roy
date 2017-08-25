@@ -55,7 +55,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.ForgotPasswordActivity"
+            android:name=".activity.ForgotPasswordOneActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ResetPasswordActivity"
@@ -67,7 +67,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
 
-
+        <activity android:name=".activity.ForgotPasswordTwoActivity" />
     </application>
 
 </manifest>

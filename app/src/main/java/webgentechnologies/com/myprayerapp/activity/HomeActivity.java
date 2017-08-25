@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -51,7 +52,10 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        if (userclass.getTxt_user_access_token() == null) {
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.setGroupVisible(R.id.group_nav_change_pwd, false);
+        }
         //add this line to display nav_editProfile when the activity is loaded
         displaySelectedScreen(R.id.nav_editProfile);
         Toast.makeText(getApplicationContext(), userclass.getTxt_user_login_id() + "\n" + userclass.getTxt_user_access_token(), Toast.LENGTH_LONG).show();

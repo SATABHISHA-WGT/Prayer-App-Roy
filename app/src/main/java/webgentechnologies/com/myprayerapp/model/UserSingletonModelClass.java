@@ -86,20 +86,38 @@ public class UserSingletonModelClass {
     String txt_user_login_id;
     String txt_user_access_token;
     String txt_temp_user_login_email;
+    String txt_user_login_fname;
+    String txt_user_login_lname;
     /*
     *Facebook Login variables
      */
     String txt_fcbl_lgn_first_name;
     String txt_fcbk_lgn_last_name;
-    String txt_fcbk_lgn_email;
+    String txt_fcbk_login_and_normal_login_email;
     String txt_fcbk_lgn_gender;
     String txt_fcbk_lgn_fcbkid;
 
     /*
-    *ForgotPasswordActivity variables
+    *ForgotPasswordOneActivity variables
      */
     String txt_email_for_forgot_password;
     String txt_otp_from_email;
+
+    /*
+    *Change password variables
+     */
+    // String txt_otp_from_email_to_change_pswd;
+    String txt_change_pswd;
+
+    /*
+    *PostPrayerTextFrag variables
+     */
+    String txt_post_content_textfrag;
+    String txt_post_description_textfrag;
+    String txt_accessibility_txtfrag;
+    String txt_post_type_txtfrag;
+    String txt_post_priority_txtfrag;
+    String txt_created_date_txtfrag;
 
 //-----------------------getters----------------------
 
@@ -268,8 +286,8 @@ public class UserSingletonModelClass {
         return txt_fcbk_lgn_last_name;
     }
 
-    public String getTxt_fcbk_lgn_email() {
-        return txt_fcbk_lgn_email;
+    public String getTxt_fcbk_login_and_normal_login_email() {
+        return txt_fcbk_login_and_normal_login_email;
     }
 
     public String getTxt_fcbk_lgn_gender() {
@@ -290,6 +308,46 @@ public class UserSingletonModelClass {
 
     public String getTxt_otp_from_email() {
         return txt_otp_from_email;
+    }
+
+  /*  public String getTxt_otp_from_email_to_change_pswd() {
+        return txt_otp_from_email_to_change_pswd;
+    }*/
+
+    public String getTxt_change_pswd() {
+        return txt_change_pswd;
+    }
+
+    public String getTxt_post_content_textfrag() {
+        return txt_post_content_textfrag;
+    }
+
+    public String getTxt_post_description_textfrag() {
+        return txt_post_description_textfrag;
+    }
+
+    public String getTxt_accessibility_txtfrag() {
+        return txt_accessibility_txtfrag;
+    }
+
+    public String getTxt_post_type_txtfrag() {
+        return txt_post_type_txtfrag;
+    }
+
+    public String getTxt_post_priority_txtfrag() {
+        return txt_post_priority_txtfrag;
+    }
+
+    public String getTxt_created_date_txtfrag() {
+        return txt_created_date_txtfrag;
+    }
+
+    public String getTxt_user_login_fname() {
+        return txt_user_login_fname;
+    }
+
+    public String getTxt_user_login_lname() {
+        return txt_user_login_lname;
     }
     //-----------------------setters----------------------
 
@@ -459,8 +517,8 @@ public class UserSingletonModelClass {
         this.txt_fcbk_lgn_last_name = txt_fcbk_lgn_last_name;
     }
 
-    public void setTxt_fcbk_lgn_email(String txt_fcbk_lgn_email) {
-        this.txt_fcbk_lgn_email = txt_fcbk_lgn_email;
+    public void setTxt_fcbk_login_and_normal_login_email(String txt_fcbk_login_and_normal_login_email) {
+        this.txt_fcbk_login_and_normal_login_email = txt_fcbk_login_and_normal_login_email;
     }
 
     public void setTxt_fcbk_lgn_gender(String txt_fcbk_lgn_gender) {
@@ -481,5 +539,45 @@ public class UserSingletonModelClass {
 
     public void setTxt_otp_from_email(String txt_otp_from_email) {
         this.txt_otp_from_email = txt_otp_from_email;
+    }
+
+  /*  public void setTxt_otp_from_email_to_change_pswd(String txt_otp_from_email_to_change_pswd) {
+        this.txt_otp_from_email_to_change_pswd = txt_otp_from_email_to_change_pswd;
+    }*/
+
+    public void setTxt_change_pswd(String txt_change_pswd) {
+        this.txt_change_pswd = txt_change_pswd;
+    }
+
+    public void setTxt_post_content_textfrag(String txt_post_content_textfrag) {
+        this.txt_post_content_textfrag = txt_post_content_textfrag;
+    }
+
+    public void setTxt_post_description_textfrag(String txt_post_description_textfrag) {
+        this.txt_post_description_textfrag = txt_post_description_textfrag;
+    }
+
+    public void setTxt_accessibility_txtfrag(String txt_accessibility_txtfrag) {
+        this.txt_accessibility_txtfrag = txt_accessibility_txtfrag;
+    }
+
+    public void setTxt_post_type_txtfrag(String txt_post_type_txtfrag) {
+        this.txt_post_type_txtfrag = txt_post_type_txtfrag;
+    }
+
+    public void setTxt_post_priority_txtfrag(String txt_post_priority_txtfrag) {
+        this.txt_post_priority_txtfrag = txt_post_priority_txtfrag;
+    }
+
+    public void setTxt_created_date_txtfrag(String txt_created_date_txtfrag) {
+        this.txt_created_date_txtfrag = txt_created_date_txtfrag;
+    }
+
+    public void setTxt_user_login_fname(String txt_user_login_fname) {
+        this.txt_user_login_fname = txt_user_login_fname;
+    }
+
+    public void setTxt_user_login_lname(String txt_user_login_lname) {
+        this.txt_user_login_lname = txt_user_login_lname;
     }
 }

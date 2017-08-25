@@ -83,7 +83,7 @@ public class EditOneFrag extends Fragment implements TextWatcher {
         txt_phone = (EditText) rootView.findViewById(R.id.txt_phone);
         txt_fname.setText(userclass.getTxt_fcbl_lgn_first_name());
         txt_lname.setText(userclass.getTxt_fcbk_lgn_last_name());
-        txt_email.setText(userclass.getTxt_fcbk_lgn_email());
+        txt_email.setText(userclass.getTxt_fcbk_login_and_normal_login_email());
         spinner_state = (Spinner) rootView.findViewById(R.id.spinner_state);
         spinner_country = (Spinner) rootView.findViewById(R.id.txt_country);
         setCustomDesign();

@@ -20,6 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,12 +29,14 @@ import webgentechnologies.com.myprayerapp.R;
 import webgentechnologies.com.myprayerapp.model.UserSingletonModelClass;
 import webgentechnologies.com.myprayerapp.networking.UrlConstants;
 
-public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener {
+public class ForgotPasswordOneActivity extends AppCompatActivity implements View.OnClickListener {
     Context m_ctx;
     Button m_btn_getOtp;
     TextView m_btn_backToLogin;
-    EditText m_txt_verifyEmail;
+    EditText m_txt_verifyEmail, txt_otp;
     UserSingletonModelClass userclass = UserSingletonModelClass.get_userSingletonModelClass();
+    String txt_otp_from_email, txt_m_txt_verifyEmail;
+    Button btn_verify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
             }
         });
 
-        m_btn_getOtp = (Button) findViewById(R.id.btn_getOtp);
+       /* m_btn_getOtp = (Button) findViewById(R.id.btn_getOtp);
         m_btn_getOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,11 +95,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                     }
                 });
             }
-        });
+        });*/
     }
 
     private void setCustomDesign() {
-        m_ctx = ForgotPasswordActivity.this;
+        m_ctx = ForgotPasswordOneActivity.this;
         Typeface regular_font = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
         Typeface semiBold_font = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-SemiBold.ttf");
 
@@ -112,11 +116,14 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
             case R.id.btn_getOtp:
                 // get prompts.xml view
                 userclass.setTxt_email_for_forgot_password(m_txt_verifyEmail.getText().toString());
+                //   txt_m_txt_verifyEmail=m_txt_verifyEmail.getText().toString();
+                //volley method calling for getting otp to email
                 getOtptoemail();
+
+                //Code for dialog
                 LayoutInflater li = LayoutInflater.from(m_ctx);
                 View promptsView = li.inflate(R.layout.verify_email_dialog, null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        m_ctx);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(m_ctx);
                 // set prompts.xml to alertdialog builder
                 alertDialogBuilder.setView(promptsView);
                 // set dialog message
@@ -126,8 +133,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                 final AlertDialog alertDialog = alertDialogBuilder.create();
                 // show it
                 alertDialog.show();
-                final EditText txt_otp = (EditText) promptsView.findViewById(R.id.txt_otp);
-                Button btn_verify = (Button) promptsView.findViewById(R.id.btn_verify);
+                txt_otp = (EditText) promptsView.findViewById(R.id.txt_otp);
+                btn_verify = (Button) promptsView.findViewById(R.id.btn_verify);
                 Button btn_back = (Button) promptsView.findViewById(R.id.btn_back);
                 btn_back.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -138,10 +145,13 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                 btn_verify.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        userclass.setTxt_otp_from_email(txt_otp.getText().toString());
-                        Intent intent = new Intent(m_ctx, ResetPasswordActivity.class);
+                        // userclass.setTxt_otp_from_email(txt_otp.getText().toString());
+                        txt_otp_from_email = txt_otp.getText().toString();
+                        verifyOtp();
+                        alertDialog.dismiss();
+                      /*  Intent intent = new Intent(m_ctx, ResetPasswordActivity.class);
                         intent.putExtra("verify_mode", "forgot_pwd");
-                        startActivity(intent);
+                        startActivity(intent);*/
                     }
                 });
                 break;
@@ -157,18 +167,18 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_OTP_IN_USER_EMAIL_FORGOT_PASSWORD, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(ForgotPasswordActivity.this, response, Toast.LENGTH_LONG).show();
+                Toast.makeText(ForgotPasswordOneActivity.this, response, Toast.LENGTH_LONG).show();
               /*  try {
                     JSONObject job = new JSONObject(response);
                     String status = job.getString("status");
 
                     if (status.equals("true")) {
-                       // startActivity(new Intent(ForgotPasswordActivity.this, HomeActivity.class));
+                       // startActivity(new Intent(ForgotPasswordOneActivity.this, HomeActivity.class));
                         JSONObject jobdata = job.getJSONObject("data");
                         userclass.setTxt_user_login_id(jobdata.getString("id"));
                         userclass.setTxt_user_access_token(jobdata.getString("accessToken"));
                         userclass.setTxt_temp_user_login_email(jobdata.getString("email"));
-                        userclass.setTxt_fcbk_lgn_email(userclass.getTxt_temp_user_login_email());
+                        userclass.setTxt_fcbk_login_and_normal_login_email(userclass.getTxt_temp_user_login_email());
                     } else
                         Toast.makeText(getApplicationContext(), "Incorrect email_id or password", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -205,26 +215,42 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     Volley code for verifying otp
      */
     public void verifyOtp() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_OTP_IN_FORGOT_PASSWORD, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UrlConstants._URL_OTP_RECEIVED_FOR_FORGOTPASSWORD_VERIFY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(ForgotPasswordActivity.this, response, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
               /*  try {
                     JSONObject job = new JSONObject(response);
                     String status = job.getString("status");
 
                     if (status.equals("true")) {
-                       // startActivity(new Intent(ForgotPasswordActivity.this, HomeActivity.class));
+                       // startActivity(new Intent(ForgotPasswordOneActivity.this, HomeActivity.class));
                         JSONObject jobdata = job.getJSONObject("data");
                         userclass.setTxt_user_login_id(jobdata.getString("id"));
                         userclass.setTxt_user_access_token(jobdata.getString("accessToken"));
                         userclass.setTxt_temp_user_login_email(jobdata.getString("email"));
-                        userclass.setTxt_fcbk_lgn_email(userclass.getTxt_temp_user_login_email());
+                        userclass.setTxt_fcbk_login_and_normal_login_email(userclass.getTxt_temp_user_login_email());
                     } else
                         Toast.makeText(getApplicationContext(), "Incorrect email_id or password", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
+                try {
+                    JSONObject job = new JSONObject(response);
+                    String status = job.getString("status");
+
+                    if (status.equals("true")) {
+                       /* Intent intent = new Intent(ForgotPasswordOneActivity.this, ForgotPasswordTwoActivity.class);
+                       // intent.putExtra("verify_mode", "change_pwd");
+                        ForgotPasswordOneActivity.this.startActivity(intent);*/
+                        startActivity(new Intent(ForgotPasswordOneActivity.this, ForgotPasswordTwoActivity.class));
+                        Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Incorrect otp...please verify again", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         }, new Response.ErrorListener() {
@@ -239,7 +265,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
               /*  params.put(KEY_USERNAME,username);
                 params.put(KEY_PASSWORD,password);
                 params.put(KEY_EMAIL, email);*/
-                params.put("otp", "");
+                params.put("otp", txt_otp_from_email);
                 params.put("email", userclass.getTxt_email_for_forgot_password());
                 params.put("device_id", "245");
                 params.put("device_type", "Android");
